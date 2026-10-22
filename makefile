@@ -3,7 +3,8 @@ CFLAGS = --target=riscv32-unknown-elf -march=rv32imac_zicsr -mabi=ilp32 \
          -std=c11 -O2 -g3 -Wall -Wextra -ffreestanding -fno-stack-protector \
          -nostdlib -fuse-ld=lld
 
-SRC = boot.S
+KERNEL_SRC = kernel.c
+HEADERS = $(wildcard *.h)
 
 QEMU = qemu-system-riscv32
 QEMUFLAGS = -machine virt -bios default -nographic -serial mon:stdio -no-reboot
@@ -12,8 +13,8 @@ QEMUFLAGS = -machine virt -bios default -nographic -serial mon:stdio -no-reboot
 
 all: kernel.elf
 
-kernel.elf: $(SRC) kernel.ld
-	$(CC) $(CFLAGS) -Wl,-Tkernel.ld -Wl,-Map=kernel.map $(SRC) -o $@
+kernel.elf: $(KERNEL_SRC) $(HEADERS) kernel.ld
+	$(CC) $(CFLAGS) -Wl,-Tkernel.ld -Wl,-Map=kernel.map $(KERNEL_SRC) -o $@
 
 run: all
 	$(QEMU) $(QEMUFLAGS) -kernel kernel.elf
