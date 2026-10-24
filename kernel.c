@@ -1,4 +1,5 @@
 #include "kernel.h"
+#include "common.h"
 
 extern char __bss[], __bss_end[], __stack_top[];
 
@@ -7,13 +8,17 @@ struct sbiret sbi_putchar(char ch) {
   register long a7 __asm__("a7") = 1;
   __asm__ __volatile__(
     "ecall"
-    : "+r"(a0), "+r"(a1)
+    : "+r"(a0)
     : "r"(a7)
     : "memory"
   );
 
   return (struct sbiret){ .error = a0, .value = 0 };
 }
+
+void putchar(char ch) { sbi_putchar(ch); }
+
+
 
 void sbi_shutdown(void){
   register long a7 __asm__("a7") = 8;
@@ -30,10 +35,8 @@ void sbi_shutdown(void){
 
 
 void kernelMain(void){
-  const char *s = "\nHellow Word!\n";
-  for(int i = 0; s[i] != '\0'; i++)
-    sbi_putchar(s[i]);
-
+  printf("\nHello World!\n");
+  printf("1 + 2 = %d, %x\n", 3, 0xdeadbeef);
   sbi_shutdown();
 }
 

@@ -3,7 +3,7 @@ CFLAGS = --target=riscv32-unknown-elf -march=rv32imac_zicsr -mabi=ilp32 \
          -std=c11 -O2 -g3 -Wall -Wextra -ffreestanding -fno-stack-protector \
          -nostdlib -fuse-ld=lld
 
-KERNEL_SRC = kernel.c
+KERNEL_SRC = kernel.c common.c
 HEADERS = $(wildcard *.h)
 
 QEMU = qemu-system-riscv32
