@@ -21,6 +21,9 @@ typedef uint32_t size_t;
 
 void printf(const char *fmt, ...);
 
+void *memset(void *buf, char c, size_t n);
+void *memcopy(void *dst, const void *src, size_t n);
+
 void putchar(char ch);
 
 #endif /* COMMON_H */

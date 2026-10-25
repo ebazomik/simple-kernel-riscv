@@ -35,6 +35,8 @@ void sbi_shutdown(void){
 
 
 void kernelMain(void){
+  memset(__bss, 0, (size_t) __bss_end - (size_t) __bss);
+
   printf("\nHello World!\n");
   printf("1 + 2 = %d, %x\n", 3, 0xdeadbeef);
   sbi_shutdown();
