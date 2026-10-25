@@ -21,6 +21,35 @@ void *memcpy(void *dst, const void *src, size_t n){
 }
 
 
+void *strcpy(char *dst, const char *src){
+  size_t i = 0;
+  while(src[i] != '\0'){
+    dst[i] = src[i];
+    i++;
+  }
+  dst[i] = '\0';
+  return dst;
+}
+
+int strcmp(const char *s1, const char *s2){
+  while(*s1 && *s1 == *s2){
+    s1++;
+    s2++;
+  }
+
+  return *(const unsigned char*)s1 - *(const unsigned char*)s2; 
+}
+
+
+size_t strlen(const char *s){
+  size_t l = 0;
+  while(s[l] != '\0'){
+    l++;
+  }
+  return l;
+}
+
+
 void printf(const char *fmt, ...){
   va_list args;
   va_start(args, fmt);

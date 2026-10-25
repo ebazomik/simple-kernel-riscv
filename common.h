@@ -24,6 +24,9 @@ void printf(const char *fmt, ...);
 void *memset(void *buf, char c, size_t n);
 void *memcopy(void *dst, const void *src, size_t n);
 
+int strcmp(const char *s1, const char *s2);
+size_t strlen(const char *s);
+
 void putchar(char ch);
 
 #endif /* COMMON_H */
