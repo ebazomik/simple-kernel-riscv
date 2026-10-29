@@ -39,7 +39,9 @@ void kernelMain(void){
 
   printf("\nHello World!\n");
   printf("1 + 2 = %d, %x\n", 3, 0xdeadbeef);
-  sbi_shutdown();
+  PANIC("Booted!");
+
+  PANIC("Unreachable here!");
 }
 
 __attribute__((section(".text.boot")))
