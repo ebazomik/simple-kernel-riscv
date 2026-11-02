@@ -31,7 +31,7 @@ struct sbiret {
     __asm__ __volatile__("csrw " #reg ", %0" ::"r"(__tmp)); \
   } while(0)                                                
 
-
+ 
 // Need trap_frame struct for save registers status before handling trap.
 // This state will be restored after trap handle
 struct trap_frame {

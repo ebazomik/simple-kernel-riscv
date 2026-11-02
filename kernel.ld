@@ -20,9 +20,14 @@ SECTIONS {
     __bss = .;
     *(.bss, .bss.*, .sbss, .sbss.*);
     __bss_end = .;
-
-    . = ALIGN(4);
-    . += 128 * 1024;
-    __stack_top = .;
   }
+
+  . = ALIGN(4);
+  . += 128 * 1024;
+  __stack_top = .;
+
+  . = ALIGN(4);
+  __free_ram = .;
+  . += 64 * 1024 * 1024;
+  __free_ram_end = .;
 }

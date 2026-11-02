@@ -2,6 +2,7 @@
 #include "common.h"
 
 extern char __bss[], __bss_end[], __stack_top[];
+extern char __free_ram[], __free_ram_end[];
 
 struct sbiret sbi_putchar(char ch) {
   register long a0 __asm__("a0") = ch;
@@ -125,10 +126,14 @@ void kernelMain(void){
   memset(__bss, 0, (size_t) __bss_end - (size_t) __bss); 
 
   WRITE_CSR(stvec, (uint32_t) kernel_entry);
-  
 
   printf("Try to trigger trap with unimp\n");
-  __asm__ __volatile__("unimp");
+
+  printf(
+    "Free RAM: %x - %x, %d Pages\n",
+    (paddr_t) __free_ram,
+    (paddr_t) __free_ram_end,
+    (int) ((__free_ram_end - __free_ram) / PAGE_SIZE));
 
   sbi_shutdown();
 }
