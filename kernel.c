@@ -122,6 +122,18 @@ void kernel_entry(void){
       "sret\n");
 }
 
+paddr_t alloc_pages(uint32_t n) {
+  static paddr_t next_paddr = (paddr_t) __free_ram;
+  paddr_t paddr = next_paddr;
+
+  next_paddr += n * PAGE_SIZE;
+  if (next_paddr > (paddr_t) __free_ram_end)
+    PANIC("out of memory");
+
+  memset((void *) paddr, 0, n * PAGE_SIZE);
+  return paddr;
+}
+
 void kernelMain(void){
   memset(__bss, 0, (size_t) __bss_end - (size_t) __bss); 
 
@@ -134,6 +146,12 @@ void kernelMain(void){
     (paddr_t) __free_ram,
     (paddr_t) __free_ram_end,
     (int) ((__free_ram_end - __free_ram) / PAGE_SIZE));
+
+  // Page allocation is not aligned, check the problem
+  paddr_t paddr0 = alloc_pages(2);
+  paddr_t paddr1 = alloc_pages(1);
+  printf("alloc_pages test: paddr0=%x\n", paddr0);
+  printf("alloc_pages test: paddr1=%x\n", paddr1);
 
   sbi_shutdown();
 }
