@@ -134,24 +134,68 @@ paddr_t alloc_pages(uint32_t n) {
   return paddr;
 }
 
+struct process processTable[MAX_PROCESS];
+
+struct process *createProcess(uint32_t pc){
+  struct process *proc = NULL;
+  int i = 0;
+  for(;i < MAX_PROCESS; i++){
+    if(processTable[i].state == PROC_UNUSED){
+      proc = &processTable[i];
+      break;
+    }
+  };
+
+  if(proc == NULL) PANIC("processTable full\n");
+
+  uint32_t *sp = (uint32_t *) &proc->stack[sizeof(proc->stack)];
+  *--sp = pc;
+
+  proc->pid = i + 1;
+  proc->state = PROC_RUNNABLE;
+  proc->sp = (vaddr_t) sp;
+  return proc;
+}
+
+
+__attribute((naked))
+void startProcess(uint32_t sp){
+  __asm__ __volatile__(
+    "mv sp, a0\n"
+    "lw ra, 0(sp)\n"
+    "addi sp, sp, 4\n"
+    "ret\n");
+}
+
+
+struct process *proc_a;
+
+void delay(void) {
+  for (int i = 0; i < 3000000; i++)
+    __asm__ __volatile__("nop");
+}
+
+void proc_a_entry(void) {
+  uint32_t sp;
+  __asm__ __volatile__("mv %0, sp" : "=r"(sp));
+  printf("starting process A, sp=%x\n", sp);
+  while (1) {
+    putchar('A');
+    delay();
+  }
+}
+
 void kernelMain(void){
   memset(__bss, 0, (size_t) __bss_end - (size_t) __bss); 
 
   WRITE_CSR(stvec, (uint32_t) kernel_entry);
 
-  printf("Try to trigger trap with unimp\n");
-
-  printf(
-    "Free RAM: %x - %x, %d Pages\n",
-    (paddr_t) __free_ram,
-    (paddr_t) __free_ram_end,
-    (int) ((__free_ram_end - __free_ram) / PAGE_SIZE));
-
-  // Page allocation is not aligned, check the problem
-  paddr_t paddr0 = alloc_pages(2);
-  paddr_t paddr1 = alloc_pages(1);
-  printf("alloc_pages test: paddr0=%x\n", paddr0);
-  printf("alloc_pages test: paddr1=%x\n", paddr1);
+  proc_a = createProcess((uint32_t) proc_a_entry);
+  printf("process %d: stack %x - %x\n", proc_a->pid,
+         (uint32_t) proc_a->stack,
+         (uint32_t) &proc_a->stack[sizeof(proc_a->stack)]);
+ 
+  startProcess(proc_a->sp); 
 
   sbi_shutdown();
 }
