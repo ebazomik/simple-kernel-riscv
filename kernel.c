@@ -149,6 +149,20 @@ struct process *createProcess(uint32_t pc){
   if(proc == NULL) PANIC("processTable full\n");
 
   uint32_t *sp = (uint32_t *) &proc->stack[sizeof(proc->stack)];
+
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+  *--sp = 0;
+
   *--sp = pc;
 
   proc->pid = i + 1;
@@ -157,45 +171,84 @@ struct process *createProcess(uint32_t pc){
   return proc;
 }
 
-
-__attribute((naked))
-void startProcess(uint32_t sp){
-  __asm__ __volatile__(
-    "mv sp, a0\n"
-    "lw ra, 0(sp)\n"
-    "addi sp, sp, 4\n"
-    "ret\n");
-}
-
-
 struct process *proc_a;
+struct process *proc_b;
 
 void delay(void) {
   for (int i = 0; i < 3000000; i++)
     __asm__ __volatile__("nop");
 }
 
+
+__attribute__((naked))
+void switchContext(uint32_t *old, uint32_t *new){
+    __asm__ __volatile__(
+        "addi sp, sp, -64\n" // 16-byte preserve align (risc-v specs)
+        "sw ra, 0(sp)\n"
+        "sw s0, 4(sp)\n"
+        "sw s1, 8(sp)\n"
+        "sw s2, 12(sp)\n"
+        "sw s3, 16(sp)\n"
+        "sw s4, 20(sp)\n"
+        "sw s5, 24(sp)\n"
+        "sw s6, 28(sp)\n"
+        "sw s7, 32(sp)\n"
+        "sw s8, 36(sp)\n"
+        "sw s9, 40(sp)\n"
+        "sw s10, 44(sp)\n"
+        "sw s11, 48(sp)\n"
+
+        "sw sp, (a0)\n" // Store old stack pointer
+        "lw sp, (a1)\n" // Load new stack pointer
+
+        "lw ra, 0(sp)\n"
+        "lw s0, 4(sp)\n"
+        "lw s1, 8(sp)\n"
+        "lw s2, 12(sp)\n"
+        "lw s3, 16(sp)\n"
+        "lw s4, 20(sp)\n"
+        "lw s5, 24(sp)\n"
+        "lw s6, 28(sp)\n"
+        "lw s7, 32(sp)\n"
+        "lw s8, 36(sp)\n"
+        "lw s9, 40(sp)\n"
+        "lw s10, 44(sp)\n"
+        "lw s11, 48(sp)\n"
+        "addi sp, sp, 64\n"
+
+        "ret\n"
+    );
+}
+
+
 void proc_a_entry(void) {
-  uint32_t sp;
-  __asm__ __volatile__("mv %0, sp" : "=r"(sp));
-  printf("starting process A, sp=%x\n", sp);
+  printf("starting process A\n");
   while (1) {
     putchar('A');
+    switchContext(&proc_a->sp, &proc_b->sp);
     delay();
   }
 }
 
+void proc_b_entry(void) {
+  printf("starting process B\n");
+  while (1) {
+    putchar('B');
+    switchContext(&proc_b->sp, &proc_a->sp);
+    delay();
+  }
+}
+
+
 void kernelMain(void){
-  memset(__bss, 0, (size_t) __bss_end - (size_t) __bss); 
+  memset(__bss, 0, (size_t) __bss_end - (size_t) __bss);
 
   WRITE_CSR(stvec, (uint32_t) kernel_entry);
 
   proc_a = createProcess((uint32_t) proc_a_entry);
-  printf("process %d: stack %x - %x\n", proc_a->pid,
-         (uint32_t) proc_a->stack,
-         (uint32_t) &proc_a->stack[sizeof(proc_a->stack)]);
- 
-  startProcess(proc_a->sp); 
+  proc_b = createProcess((uint32_t) proc_b_entry);
+
+  proc_a_entry();
 
   sbi_shutdown();
 }
