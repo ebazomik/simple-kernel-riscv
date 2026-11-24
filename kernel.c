@@ -135,6 +135,8 @@ paddr_t alloc_pages(uint32_t n) {
 }
 
 struct process processTable[MAX_PROCESS];
+struct process *currentProcess;
+struct process *idleProcess;
 
 struct process *createProcess(uint32_t pc){
   struct process *proc = NULL;
@@ -147,24 +149,15 @@ struct process *createProcess(uint32_t pc){
   };
 
   if(proc == NULL) PANIC("processTable full\n");
+  
+  uint32_t stack_top = (uint32_t)&proc->stack[sizeof(proc->stack)];
+  stack_top &= ~(uint32_t)0xF;
 
-  uint32_t *sp = (uint32_t *) &proc->stack[sizeof(proc->stack)];
-
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-  *--sp = 0;
-
-  *--sp = pc;
-
+  uint32_t *sp = (uint32_t *)(stack_top - 64);
+  
+  memset(sp, 0, 64);
+  sp[0] = pc;
+ 
   proc->pid = i + 1;
   proc->state = PROC_RUNNABLE;
   proc->sp = (vaddr_t) sp;
@@ -173,9 +166,10 @@ struct process *createProcess(uint32_t pc){
 
 struct process *proc_a;
 struct process *proc_b;
+struct process *proc_c;
 
 void delay(void) {
-  for (int i = 0; i < 3000000; i++)
+  for (int i = 0; i < 300000000; i++)
     __asm__ __volatile__("nop");
 }
 
@@ -220,12 +214,31 @@ void switchContext(uint32_t *old, uint32_t *new){
     );
 }
 
+void yeld(void){
+  struct process *next = idleProcess;
+  
+  for(int i = 0; i < MAX_PROCESS; i++){
+    struct process *proc = &processTable[(currentProcess->pid + i) % MAX_PROCESS];
+    if(proc->state == PROC_RUNNABLE && proc->pid > 0) {
+      next = proc;
+      break;
+    } 
+  }
+
+  if(currentProcess == next) return;
+  
+  struct process *prev = currentProcess;
+  currentProcess = next;
+
+  switchContext(&prev->sp, &next->sp);
+}
+
 
 void proc_a_entry(void) {
   printf("starting process A\n");
   while (1) {
     putchar('A');
-    switchContext(&proc_a->sp, &proc_b->sp);
+    yeld();
     delay();
   }
 }
@@ -234,10 +247,20 @@ void proc_b_entry(void) {
   printf("starting process B\n");
   while (1) {
     putchar('B');
-    switchContext(&proc_b->sp, &proc_a->sp);
+    yeld();
     delay();
   }
 }
+
+void proc_c_entry(void) {
+  printf("starting process C\n");
+  while (1) {
+    putchar('C');
+    yeld();
+    delay();
+  }
+}
+
 
 
 void kernelMain(void){
@@ -245,10 +268,16 @@ void kernelMain(void){
 
   WRITE_CSR(stvec, (uint32_t) kernel_entry);
 
+  idleProcess = createProcess((uint32_t) NULL);
+  idleProcess->pid = 0;
+  idleProcess->state = PROC_RUNNABLE;
+  currentProcess = idleProcess;
+
   proc_a = createProcess((uint32_t) proc_a_entry);
   proc_b = createProcess((uint32_t) proc_b_entry);
+  proc_c = createProcess((uint32_t) proc_c_entry);
 
-  proc_a_entry();
+  yeld();
 
   sbi_shutdown();
 }
