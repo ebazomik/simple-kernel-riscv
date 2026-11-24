@@ -151,7 +151,7 @@ struct process *createProcess(uint32_t pc){
   if(proc == NULL) PANIC("processTable full\n");
   
   uint32_t stack_top = (uint32_t)&proc->stack[sizeof(proc->stack)];
-  stack_top &= ~(uint32_t)0xF;
+  stack_top = stack_top & ~(uint32_t)0xF;
 
   uint32_t *sp = (uint32_t *)(stack_top - 64);
   

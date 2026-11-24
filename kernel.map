@@ -1,7 +1,7 @@
      VMA      LMA     Size Align Out     In      Symbol
        0        0 80200000     1 . = 0x80200000
 80200000 80200000      ae0     4 .text
-80200000 80200000        e     2         /tmp/kernel-546a81.o:(.text.boot)
+80200000 80200000        e     2         /tmp/kernel-c73964.o:(.text.boot)
 80200000 80200000        0     1                 .L0 
 80200000 80200000        0     1                 .L0 
 80200000 80200000        0     1                 $xrv32i2p1_m2p0_a2p1_c2p0_zicsr2p0_zmmul1p0_zaamo1p0_zalrsc1p0_zca1p0
@@ -9,7 +9,7 @@
 80200000 80200000        e     1                 boot
 8020000e 8020000e        0     1                 .L0 
 8020000e 8020000e        0     1                 .L0 
-80200010 80200010      87c     4         /tmp/kernel-546a81.o:(.text)
+80200010 80200010      87c     4         /tmp/kernel-c73964.o:(.text)
 80200010 80200010        0     1                 .L0 
 80200010 80200010        0     1                 .L0 
 80200010 80200010        0     1                 $xrv32i2p1_m2p0_a2p1_c2p0_zicsr2p0_zmmul1p0_zaamo1p0_zalrsc1p0_zca1p0
@@ -569,7 +569,7 @@
 8020088c 8020088c        0     1                 .L0 
 8020088c 8020088c        0     1                 .L0 
 8020088c 8020088c        0     1                 .L0 
-8020088c 8020088c      254     2         /tmp/common-b02a11.o:(.text)
+8020088c 8020088c      254     2         /tmp/common-959923.o:(.text)
 8020088c 8020088c        0     1                 .L0 
 8020088c 8020088c        0     1                 .L0 
 8020088c 8020088c        0     1                 $xrv32i2p1_m2p0_a2p1_c2p0_zicsr2p0_zmmul1p0_zaamo1p0_zalrsc1p0_zca1p0
@@ -764,12 +764,12 @@
 80200ae0 80200ae0       cb     4 .rodata
 80200ae0 80200ae0       cb     1         <internal>:(.rodata.str1.1)
 80200bac 80200bac        4     4 .data
-80200bac 80200bac        4     4         /tmp/kernel-546a81.o:(.data)
+80200bac 80200bac        4     4         /tmp/kernel-c73964.o:(.data)
 80200bac 80200bac        4     1                 alloc_pages.next_paddr
 80200bac 80200bac        0     1                 $d
 80200bb0 80200bb0    10094     4 .bss
 80200bb0 80200bb0        0     1         __bss = .
-80200bb0 80200bb0    10094     4         /tmp/kernel-546a81.o:(.bss)
+80200bb0 80200bb0    10094     4         /tmp/kernel-c73964.o:(.bss)
 80200bb0 80200bb0        0     1                 $d
 80200bb0 80200bb0    10080     1                 processTable
 80210c30 80210c30       14     1                 .L_MergedGlobals
@@ -787,43 +787,43 @@
 80230c44 80230c44  4000000     1 . += 64 * 1024 * 1024
 84230c44 84230c44        0     1 __free_ram_end = .
        0        0      83b     1 .debug_loclists
-       0        0      662     1         /tmp/kernel-546a81.o:(.debug_loclists)
+       0        0      662     1         /tmp/kernel-c73964.o:(.debug_loclists)
        0        0        0     1                 $d
        c        c        0     1                 .L0 
-     662      662      1d9     1         /tmp/common-b02a11.o:(.debug_loclists)
+     662      662      1d9     1         /tmp/common-959923.o:(.debug_loclists)
      662      662        0     1                 $d
      66e      66e        0     1                 .L0 
        0        0      3ef     1 .debug_abbrev
-       0        0      2ae     1         /tmp/kernel-546a81.o:(.debug_abbrev)
+       0        0      2ae     1         /tmp/kernel-c73964.o:(.debug_abbrev)
        0        0        0     1                 $d
-     2ae      2ae      141     1         /tmp/common-b02a11.o:(.debug_abbrev)
+     2ae      2ae      141     1         /tmp/common-959923.o:(.debug_abbrev)
      2ae      2ae        0     1                 $d
        0        0      ab0     1 .debug_info
-       0        0      81a     1         /tmp/kernel-546a81.o:(.debug_info)
+       0        0      81a     1         /tmp/kernel-c73964.o:(.debug_info)
        0        0        0     1                 $d
-     81a      81a      296     1         /tmp/common-b02a11.o:(.debug_info)
+     81a      81a      296     1         /tmp/common-959923.o:(.debug_info)
      81a      81a        0     1                 $d
        0        0       a8     1 .debug_rnglists
-       0        0       8d     1         /tmp/kernel-546a81.o:(.debug_rnglists)
+       0        0       8d     1         /tmp/kernel-c73964.o:(.debug_rnglists)
        0        0        0     1                 $d
        c        c        0     1                 .L0 
-      8d       8d       1b     1         /tmp/common-b02a11.o:(.debug_rnglists)
+      8d       8d       1b     1         /tmp/common-959923.o:(.debug_rnglists)
       8d       8d        0     1                 $d
       99       99        0     1                 .L0 
        0        0      218     1 .debug_str_offsets
-       0        0      178     1         /tmp/kernel-546a81.o:(.debug_str_offsets)
+       0        0      178     1         /tmp/kernel-c73964.o:(.debug_str_offsets)
        0        0        0     1                 $d
        8        8        0     1                 .L0 
-     178      178       a0     1         /tmp/common-b02a11.o:(.debug_str_offsets)
+     178      178       a0     1         /tmp/common-959923.o:(.debug_str_offsets)
      178      178        0     1                 $d
      180      180        0     1                 .L0 
        0        0      2fd     1 .debug_str
        0        0      2fd     1         <internal>:(.debug_str)
        0        0      150     1 .debug_addr
-       0        0       ec     1         /tmp/kernel-546a81.o:(.debug_addr)
+       0        0       ec     1         /tmp/kernel-c73964.o:(.debug_addr)
        0        0        0     1                 $d
        8        8        0     1                 .L0 
-      ec       ec       64     1         /tmp/common-b02a11.o:(.debug_addr)
+      ec       ec       64     1         /tmp/common-959923.o:(.debug_addr)
       ec       ec        0     1                 $d
       f4       f4        0     1                 .L0 
        0        0       29     1 .comment
@@ -831,17 +831,17 @@
        0        0       57     1 .riscv.attributes
        0        0       57     1         <internal>:(.riscv.attributes)
        0        0      214     4 .debug_frame
-       0        0      16c     4         /tmp/kernel-546a81.o:(.debug_frame)
+       0        0      16c     4         /tmp/kernel-c73964.o:(.debug_frame)
        0        0        0     1                 .L0 
        0        0        0     1                 $d
-     16c      16c       a8     4         /tmp/common-b02a11.o:(.debug_frame)
+     16c      16c       a8     4         /tmp/common-959923.o:(.debug_frame)
      16c      16c        0     1                 .L0 
      16c      16c        0     1                 $d
        0        0      af3     1 .debug_line
-       0        0      810     1         /tmp/kernel-546a81.o:(.debug_line)
+       0        0      810     1         /tmp/kernel-c73964.o:(.debug_line)
        0        0        0     1                 .Lline_table_start0
        0        0        0     1                 $d
-     810      810      2e3     1         /tmp/common-b02a11.o:(.debug_line)
+     810      810      2e3     1         /tmp/common-959923.o:(.debug_line)
      810      810        0     1                 .Lline_table_start0
      810      810        0     1                 $d
        0        0       56     1 .debug_line_str
